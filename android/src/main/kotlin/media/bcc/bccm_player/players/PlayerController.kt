@@ -212,6 +212,24 @@ abstract class PlayerController : Player.Listener {
             .setIsLive(sourceExtras?.getString(PLAYER_DATA_IS_LIVE) == "true")
             .setIsOffline(sourceExtras?.getString(PLAYER_DATA_IS_OFFLINE) == "true")
             .setMetadata(metaBuilder.build())
+
+        mediaItem.localConfiguration?.drmConfiguration.also { drmConfig ->
+            if (drmConfig != null) {
+                val mediaDrmConfigurationBuilder = PlaybackPlatformApi.MediaDrmConfiguration.Builder()
+                if (drmConfig?.licenseUri != null) {
+                    mediaDrmConfigurationBuilder.setLicenseUrl(drmConfig.licenseUri.toString())
+                }
+                drmConfig?.licenseRequestHeaders.also { drmHeaders ->
+                    if (drmHeaders != null) {
+                        val requestHeaders = mutableMapOf<String, String>()
+                        for (item in drmHeaders) { requestHeaders[item.key] = item.value }
+                        mediaDrmConfigurationBuilder.setHeaders(requestHeaders)
+                    }
+                }
+                miBuilder.setDrm(mediaDrmConfigurationBuilder.build())
+            }
+        }
+
         val mimeType = sourceExtras?.getString(PLAYER_DATA_MIME_TYPE);
         if (mimeType != null) {
             miBuilder.setMimeType(mimeType)
