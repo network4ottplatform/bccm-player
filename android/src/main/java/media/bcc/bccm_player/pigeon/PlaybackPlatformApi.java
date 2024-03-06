@@ -391,6 +391,16 @@ public class PlaybackPlatformApi {
       this.metadata = setterArg;
     }
 
+    private @Nullable MediaDrmConfiguration drm;
+
+    public @Nullable MediaDrmConfiguration getDrm() {
+      return drm;
+    }
+
+    public void setDrm(@Nullable MediaDrmConfiguration setterArg) {
+      this.drm = setterArg;
+    }
+
     private @Nullable Boolean isLive;
 
     public @Nullable Boolean getIsLive() {
@@ -464,6 +474,13 @@ public class PlaybackPlatformApi {
         return this;
       }
 
+      private @Nullable MediaDrmConfiguration drm;
+
+      public @NonNull Builder setDrm(@Nullable MediaDrmConfiguration setterArg) {
+        this.drm = setterArg;
+        return this;
+      }
+
       private @Nullable Boolean isLive;
 
       public @NonNull Builder setIsLive(@Nullable Boolean setterArg) {
@@ -504,6 +521,7 @@ public class PlaybackPlatformApi {
         pigeonReturn.setUrl(url);
         pigeonReturn.setMimeType(mimeType);
         pigeonReturn.setMetadata(metadata);
+        pigeonReturn.setDrm(drm);
         pigeonReturn.setIsLive(isLive);
         pigeonReturn.setIsOffline(isOffline);
         pigeonReturn.setPlaybackStartPositionMs(playbackStartPositionMs);
@@ -515,10 +533,11 @@ public class PlaybackPlatformApi {
 
     @NonNull
     ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(8);
+      ArrayList<Object> toListResult = new ArrayList<Object>(9);
       toListResult.add(url);
       toListResult.add(mimeType);
       toListResult.add((metadata == null) ? null : metadata.toList());
+      toListResult.add((drm == null) ? null : drm.toList());
       toListResult.add(isLive);
       toListResult.add(isOffline);
       toListResult.add(playbackStartPositionMs);
@@ -535,15 +554,17 @@ public class PlaybackPlatformApi {
       pigeonResult.setMimeType((String) mimeType);
       Object metadata = list.get(2);
       pigeonResult.setMetadata((metadata == null) ? null : MediaMetadata.fromList((ArrayList<Object>) metadata));
-      Object isLive = list.get(3);
+      Object drm = list.get(3);
+      pigeonResult.setDrm((drm == null) ? null : MediaDrmConfiguration.fromList((ArrayList<Object>) drm));
+      Object isLive = list.get(4);
       pigeonResult.setIsLive((Boolean) isLive);
-      Object isOffline = list.get(4);
+      Object isOffline = list.get(5);
       pigeonResult.setIsOffline((Boolean) isOffline);
-      Object playbackStartPositionMs = list.get(5);
+      Object playbackStartPositionMs = list.get(6);
       pigeonResult.setPlaybackStartPositionMs((Double) playbackStartPositionMs);
-      Object lastKnownAudioLanguage = list.get(6);
+      Object lastKnownAudioLanguage = list.get(7);
       pigeonResult.setLastKnownAudioLanguage((String) lastKnownAudioLanguage);
-      Object lastKnownSubtitleLanguage = list.get(7);
+      Object lastKnownSubtitleLanguage = list.get(8);
       pigeonResult.setLastKnownSubtitleLanguage((String) lastKnownSubtitleLanguage);
       return pigeonResult;
     }
@@ -2088,6 +2109,100 @@ public class PlaybackPlatformApi {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class MediaDrmConfiguration {
+    private @NonNull String licenseUrl;
+
+    public @NonNull String getLicenseUrl() {
+      return licenseUrl;
+    }
+
+    public void setLicenseUrl(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"licenseUrl\" is null.");
+      }
+      this.licenseUrl = setterArg;
+    }
+
+    private @Nullable String certificateUrl;
+
+    public @Nullable String getCertificateUrl() {
+      return certificateUrl;
+    }
+
+    public void setCertificateUrl(@Nullable String setterArg) {
+      this.certificateUrl = setterArg;
+    }
+
+    private @NonNull Map<String, String> headers;
+
+    public @NonNull Map<String, String> getHeaders() {
+      return headers;
+    }
+
+    public void setHeaders(@NonNull Map<String, String> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"headers\" is null.");
+      }
+      this.headers = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    MediaDrmConfiguration() {}
+
+    public static final class Builder {
+
+      private @Nullable String licenseUrl;
+
+      public @NonNull Builder setLicenseUrl(@NonNull String setterArg) {
+        this.licenseUrl = setterArg;
+        return this;
+      }
+
+      private @Nullable String certificateUrl;
+
+      public @NonNull Builder setCertificateUrl(@Nullable String setterArg) {
+        this.certificateUrl = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, String> headers;
+
+      public @NonNull Builder setHeaders(@NonNull Map<String, String> setterArg) {
+        this.headers = setterArg;
+        return this;
+      }
+
+      public @NonNull MediaDrmConfiguration build() {
+        MediaDrmConfiguration pigeonReturn = new MediaDrmConfiguration();
+        pigeonReturn.setLicenseUrl(licenseUrl);
+        pigeonReturn.setCertificateUrl(certificateUrl);
+        pigeonReturn.setHeaders(headers);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
+      toListResult.add(licenseUrl);
+      toListResult.add(certificateUrl);
+      toListResult.add(headers);
+      return toListResult;
+    }
+
+    static @NonNull MediaDrmConfiguration fromList(@NonNull ArrayList<Object> list) {
+      MediaDrmConfiguration pigeonResult = new MediaDrmConfiguration();
+      Object licenseUrl = list.get(0);
+      pigeonResult.setLicenseUrl((String) licenseUrl);
+      Object certificateUrl = list.get(1);
+      pigeonResult.setCertificateUrl((String) certificateUrl);
+      Object headers = list.get(2);
+      pigeonResult.setHeaders((Map<String, String>) headers);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -2108,22 +2223,24 @@ public class PlaybackPlatformApi {
         case (byte) 129:
           return ChromecastState.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return MediaInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return MediaDrmConfiguration.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return MediaItem.fromList((ArrayList<Object>) readValue(buffer));
+          return MediaInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return MediaMetadata.fromList((ArrayList<Object>) readValue(buffer));
+          return MediaItem.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
-          return NpawConfig.fromList((ArrayList<Object>) readValue(buffer));
+          return MediaMetadata.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
-          return PlayerError.fromList((ArrayList<Object>) readValue(buffer));
+          return NpawConfig.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
-          return PlayerStateSnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PlayerError.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 136:
-          return PlayerTracksSnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PlayerStateSnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 137:
-          return Track.fromList((ArrayList<Object>) readValue(buffer));
+          return PlayerTracksSnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 138:
+          return Track.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 139:
           return VideoSize.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -2138,32 +2255,35 @@ public class PlaybackPlatformApi {
       } else if (value instanceof ChromecastState) {
         stream.write(129);
         writeValue(stream, ((ChromecastState) value).toList());
-      } else if (value instanceof MediaInfo) {
+      } else if (value instanceof MediaDrmConfiguration) {
         stream.write(130);
+        writeValue(stream, ((MediaDrmConfiguration) value).toList());
+      } else if (value instanceof MediaInfo) {
+        stream.write(131);
         writeValue(stream, ((MediaInfo) value).toList());
       } else if (value instanceof MediaItem) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((MediaItem) value).toList());
       } else if (value instanceof MediaMetadata) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((MediaMetadata) value).toList());
       } else if (value instanceof NpawConfig) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((NpawConfig) value).toList());
       } else if (value instanceof PlayerError) {
-        stream.write(134);
+        stream.write(135);
         writeValue(stream, ((PlayerError) value).toList());
       } else if (value instanceof PlayerStateSnapshot) {
-        stream.write(135);
+        stream.write(136);
         writeValue(stream, ((PlayerStateSnapshot) value).toList());
       } else if (value instanceof PlayerTracksSnapshot) {
-        stream.write(136);
+        stream.write(137);
         writeValue(stream, ((PlayerTracksSnapshot) value).toList());
       } else if (value instanceof Track) {
-        stream.write(137);
+        stream.write(138);
         writeValue(stream, ((Track) value).toList());
       } else if (value instanceof VideoSize) {
-        stream.write(138);
+        stream.write(139);
         writeValue(stream, ((VideoSize) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -3080,28 +3200,30 @@ public class PlaybackPlatformApi {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return MediaItem.fromList((ArrayList<Object>) readValue(buffer));
+          return MediaDrmConfiguration.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
-          return MediaItemTransitionEvent.fromList((ArrayList<Object>) readValue(buffer));
+          return MediaItem.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return MediaMetadata.fromList((ArrayList<Object>) readValue(buffer));
+          return MediaItemTransitionEvent.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PictureInPictureModeChangedEvent.fromList((ArrayList<Object>) readValue(buffer));
+          return MediaMetadata.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PlaybackEndedEvent.fromList((ArrayList<Object>) readValue(buffer));
+          return PictureInPictureModeChangedEvent.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
-          return PlaybackStateChangedEvent.fromList((ArrayList<Object>) readValue(buffer));
+          return PlaybackEndedEvent.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
-          return PlayerError.fromList((ArrayList<Object>) readValue(buffer));
+          return PlaybackStateChangedEvent.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
-          return PlayerStateSnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PlayerError.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 136:
-          return PlayerStateUpdateEvent.fromList((ArrayList<Object>) readValue(buffer));
+          return PlayerStateSnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 137:
-          return PositionDiscontinuityEvent.fromList((ArrayList<Object>) readValue(buffer));
+          return PlayerStateUpdateEvent.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 138:
-          return PrimaryPlayerChangedEvent.fromList((ArrayList<Object>) readValue(buffer));
+          return PositionDiscontinuityEvent.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 139:
+          return PrimaryPlayerChangedEvent.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 140:
           return VideoSize.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -3110,41 +3232,44 @@ public class PlaybackPlatformApi {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof MediaItem) {
+      if (value instanceof MediaDrmConfiguration) {
         stream.write(128);
+        writeValue(stream, ((MediaDrmConfiguration) value).toList());
+      } else if (value instanceof MediaItem) {
+        stream.write(129);
         writeValue(stream, ((MediaItem) value).toList());
       } else if (value instanceof MediaItemTransitionEvent) {
-        stream.write(129);
+        stream.write(130);
         writeValue(stream, ((MediaItemTransitionEvent) value).toList());
       } else if (value instanceof MediaMetadata) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((MediaMetadata) value).toList());
       } else if (value instanceof PictureInPictureModeChangedEvent) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((PictureInPictureModeChangedEvent) value).toList());
       } else if (value instanceof PlaybackEndedEvent) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((PlaybackEndedEvent) value).toList());
       } else if (value instanceof PlaybackStateChangedEvent) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((PlaybackStateChangedEvent) value).toList());
       } else if (value instanceof PlayerError) {
-        stream.write(134);
+        stream.write(135);
         writeValue(stream, ((PlayerError) value).toList());
       } else if (value instanceof PlayerStateSnapshot) {
-        stream.write(135);
+        stream.write(136);
         writeValue(stream, ((PlayerStateSnapshot) value).toList());
       } else if (value instanceof PlayerStateUpdateEvent) {
-        stream.write(136);
+        stream.write(137);
         writeValue(stream, ((PlayerStateUpdateEvent) value).toList());
       } else if (value instanceof PositionDiscontinuityEvent) {
-        stream.write(137);
+        stream.write(138);
         writeValue(stream, ((PositionDiscontinuityEvent) value).toList());
       } else if (value instanceof PrimaryPlayerChangedEvent) {
-        stream.write(138);
+        stream.write(139);
         writeValue(stream, ((PrimaryPlayerChangedEvent) value).toList());
       } else if (value instanceof VideoSize) {
-        stream.write(139);
+        stream.write(140);
         writeValue(stream, ((VideoSize) value).toList());
       } else {
         super.writeValue(stream, value);

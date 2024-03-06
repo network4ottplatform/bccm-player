@@ -168,22 +168,43 @@ class SetUrlArgs {
 }
 
 class MediaItem {
-  String? url;
-  String? mimeType;
-  MediaMetadata? metadata;
-  bool? isLive;
-  bool? isOffline;
-  double? playbackStartPositionMs;
-  String? lastKnownAudioLanguage;
-  String? lastKnownSubtitleLanguage;
+  final String? url;
+  final String? mimeType;
+  final MediaMetadata? metadata;
+  final MediaDrmConfiguration? drm;
+  final bool? isLive;
+  final bool? isOffline;
+  final double? playbackStartPositionMs;
+  final String? lastKnownAudioLanguage;
+  final String? lastKnownSubtitleLanguage;
+
+  const MediaItem({
+    this.url,
+    this.mimeType,
+    this.metadata,
+    this.drm,
+    this.isLive,
+    this.isOffline,
+    this.playbackStartPositionMs,
+    this.lastKnownAudioLanguage,
+    this.lastKnownSubtitleLanguage,
+  });
 }
 
 class MediaMetadata {
-  String? artworkUri;
-  String? title;
-  String? artist;
-  double? durationMs;
-  Map<String?, String?>? extras;
+  final String? artworkUri;
+  final String? title;
+  final String? artist;
+  final double? durationMs;
+  final Map<String?, String?>? extras;
+
+  const MediaMetadata({
+    this.artworkUri,
+    this.title,
+    this.artist,
+    this.durationMs,
+    this.extras,
+  });
 }
 
 class PlayerStateSnapshot {
@@ -330,4 +351,16 @@ class MediaItemTransitionEvent implements PlayerEvent {
   String playerId;
   MediaItem? mediaItem;
   MediaItemTransitionEvent({required this.playerId, this.mediaItem});
+}
+
+class MediaDrmConfiguration {
+  final String licenseUrl;
+  final String? certificateUrl;
+  final Map<String?, String?> headers;
+
+  const MediaDrmConfiguration({
+    required this.licenseUrl,
+    this.certificateUrl,
+    this.headers = const {},
+  });
 }

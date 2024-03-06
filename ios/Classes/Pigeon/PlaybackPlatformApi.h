@@ -88,6 +88,7 @@ typedef NS_ENUM(NSUInteger, TrackType) {
 @class PlaybackEndedEvent;
 @class PictureInPictureModeChangedEvent;
 @class MediaItemTransitionEvent;
+@class MediaDrmConfiguration;
 
 @interface NpawConfig : NSObject
 + (instancetype)makeWithAppName:(nullable NSString *)appName
@@ -119,6 +120,7 @@ typedef NS_ENUM(NSUInteger, TrackType) {
 + (instancetype)makeWithUrl:(nullable NSString *)url
     mimeType:(nullable NSString *)mimeType
     metadata:(nullable MediaMetadata *)metadata
+    drm:(nullable MediaDrmConfiguration *)drm
     isLive:(nullable NSNumber *)isLive
     isOffline:(nullable NSNumber *)isOffline
     playbackStartPositionMs:(nullable NSNumber *)playbackStartPositionMs
@@ -127,6 +129,7 @@ typedef NS_ENUM(NSUInteger, TrackType) {
 @property(nonatomic, copy, nullable) NSString * url;
 @property(nonatomic, copy, nullable) NSString * mimeType;
 @property(nonatomic, strong, nullable) MediaMetadata * metadata;
+@property(nonatomic, strong, nullable) MediaDrmConfiguration * drm;
 @property(nonatomic, strong, nullable) NSNumber * isLive;
 @property(nonatomic, strong, nullable) NSNumber * isOffline;
 @property(nonatomic, strong, nullable) NSNumber * playbackStartPositionMs;
@@ -305,6 +308,17 @@ typedef NS_ENUM(NSUInteger, TrackType) {
     mediaItem:(nullable MediaItem *)mediaItem;
 @property(nonatomic, copy) NSString * playerId;
 @property(nonatomic, strong, nullable) MediaItem * mediaItem;
+@end
+
+@interface MediaDrmConfiguration : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithLicenseUrl:(NSString *)licenseUrl
+    certificateUrl:(nullable NSString *)certificateUrl
+    headers:(NSDictionary<NSString *, NSString *> *)headers;
+@property(nonatomic, copy) NSString * licenseUrl;
+@property(nonatomic, copy, nullable) NSString * certificateUrl;
+@property(nonatomic, strong) NSDictionary<NSString *, NSString *> * headers;
 @end
 
 /// The codec used by PlaybackPlatformPigeon.

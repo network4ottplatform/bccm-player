@@ -38,6 +38,11 @@ import media.bcc.bccm_player.players.PlayerController
 import media.bcc.bccm_player.players.chromecast.CastMediaItemConverter.Companion.PLAYER_DATA_IS_LIVE
 import media.bcc.bccm_player.players.chromecast.CastMediaItemConverter.Companion.PLAYER_DATA_IS_OFFLINE
 import java.util.UUID
+import android.net.Uri
+import android.os.Bundle
+import androidx.media3.common.MediaMetadata
+import media.bcc.bccm_player.players.chromecast.CastMediaItemConverter.Companion.PLAYER_DATA_MIME_TYPE
+import media.bcc.bccm_player.players.chromecast.CastMediaItemConverter.Companion.BCCM_META_EXTRAS
 
 class ExoPlayerController(
     private val context: Context,
@@ -331,5 +336,44 @@ class ExoPlayerController(
                 .setPrioritizeTimeOverSizeThresholds(true)
                 .build()
         }
+    }
+
+    override fun mapMediaItem(mediaItem: PlaybackPlatformApi.MediaItem): MediaItem {
+        Log.d("kxc-bccm", "mapMediaItem called on ExoPlayerController")
+        val metaBuilder = MediaMetadata.Builder()
+        val exoExtras = Bundle()
+
+        if (mediaItem.metadata?.artworkUri != null) {
+            metaBuilder.setArtworkUri(Uri.parse(mediaItem.metadata?.artworkUri))
+        }
+
+        val mimeType = mediaItem.mimeType ?: "application/x-mpegURL"
+        exoExtras.putString(PLAYER_DATA_MIME_TYPE, mimeType)
+
+        if (mediaItem.isLive == true) {
+            exoExtras.putString(PLAYER_DATA_IS_LIVE, "true")
+        }
+        if (mediaItem.isOffline == true) {
+            exoExtras.putString(PLAYER_DATA_IS_OFFLINE, "true")
+        }
+
+        val sourceExtra = mediaItem.metadata?.extras
+        if (sourceExtra != null) {
+            for (extra in sourceExtra) {
+                (extra.value as? String?).let {
+                    exoExtras.putString(BCCM_META_EXTRAS + "." + extra.key, it)
+                }
+            }
+        }
+
+        metaBuilder
+            .setTitle(mediaItem.metadata?.title)
+            .setArtist(mediaItem.metadata?.artist)
+            .setExtras(exoExtras).build()
+
+        return MediaItem.Builder()
+            .setUri(mediaItem.url)
+            .setMimeType(mimeType)
+            .setMediaMetadata(metaBuilder.build()).build()
     }
 }

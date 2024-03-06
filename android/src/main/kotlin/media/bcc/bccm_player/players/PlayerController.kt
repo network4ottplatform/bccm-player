@@ -1,6 +1,7 @@
 package media.bcc.bccm_player.players
 
 import android.net.Uri
+import android.util.Log
 import android.os.Bundle
 import android.view.Surface
 import androidx.annotation.CallSuper
@@ -152,7 +153,8 @@ abstract class PlayerController : Player.Listener {
         return extraMeta
     }
 
-    fun mapMediaItem(mediaItem: PlaybackPlatformApi.MediaItem): MediaItem {
+    open fun mapMediaItem(mediaItem: PlaybackPlatformApi.MediaItem): MediaItem {
+        Log.d("kxc-bccm", "mapMediaItem called on PlayerController")
         val metaBuilder = MediaMetadata.Builder()
         val exoExtras = Bundle()
 

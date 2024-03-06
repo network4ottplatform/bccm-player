@@ -184,6 +184,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface MediaDrmConfiguration ()
++ (MediaDrmConfiguration *)fromList:(NSArray *)list;
++ (nullable MediaDrmConfiguration *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @implementation NpawConfig
 + (instancetype)makeWithAppName:(nullable NSString *)appName
     appReleaseVersion:(nullable NSString *)appReleaseVersion
@@ -260,6 +266,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 + (instancetype)makeWithUrl:(nullable NSString *)url
     mimeType:(nullable NSString *)mimeType
     metadata:(nullable MediaMetadata *)metadata
+    drm:(nullable MediaDrmConfiguration *)drm
     isLive:(nullable NSNumber *)isLive
     isOffline:(nullable NSNumber *)isOffline
     playbackStartPositionMs:(nullable NSNumber *)playbackStartPositionMs
@@ -269,6 +276,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.url = url;
   pigeonResult.mimeType = mimeType;
   pigeonResult.metadata = metadata;
+  pigeonResult.drm = drm;
   pigeonResult.isLive = isLive;
   pigeonResult.isOffline = isOffline;
   pigeonResult.playbackStartPositionMs = playbackStartPositionMs;
@@ -281,11 +289,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.url = GetNullableObjectAtIndex(list, 0);
   pigeonResult.mimeType = GetNullableObjectAtIndex(list, 1);
   pigeonResult.metadata = [MediaMetadata nullableFromList:(GetNullableObjectAtIndex(list, 2))];
-  pigeonResult.isLive = GetNullableObjectAtIndex(list, 3);
-  pigeonResult.isOffline = GetNullableObjectAtIndex(list, 4);
-  pigeonResult.playbackStartPositionMs = GetNullableObjectAtIndex(list, 5);
-  pigeonResult.lastKnownAudioLanguage = GetNullableObjectAtIndex(list, 6);
-  pigeonResult.lastKnownSubtitleLanguage = GetNullableObjectAtIndex(list, 7);
+  pigeonResult.drm = [MediaDrmConfiguration nullableFromList:(GetNullableObjectAtIndex(list, 3))];
+  pigeonResult.isLive = GetNullableObjectAtIndex(list, 4);
+  pigeonResult.isOffline = GetNullableObjectAtIndex(list, 5);
+  pigeonResult.playbackStartPositionMs = GetNullableObjectAtIndex(list, 6);
+  pigeonResult.lastKnownAudioLanguage = GetNullableObjectAtIndex(list, 7);
+  pigeonResult.lastKnownSubtitleLanguage = GetNullableObjectAtIndex(list, 8);
   return pigeonResult;
 }
 + (nullable MediaItem *)nullableFromList:(NSArray *)list {
@@ -296,6 +305,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     (self.url ?: [NSNull null]),
     (self.mimeType ?: [NSNull null]),
     (self.metadata ? [self.metadata toList] : [NSNull null]),
+    (self.drm ? [self.drm toList] : [NSNull null]),
     (self.isLive ?: [NSNull null]),
     (self.isOffline ?: [NSNull null]),
     (self.playbackStartPositionMs ?: [NSNull null]),
@@ -792,6 +802,37 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
+@implementation MediaDrmConfiguration
++ (instancetype)makeWithLicenseUrl:(NSString *)licenseUrl
+    certificateUrl:(nullable NSString *)certificateUrl
+    headers:(NSDictionary<NSString *, NSString *> *)headers {
+  MediaDrmConfiguration* pigeonResult = [[MediaDrmConfiguration alloc] init];
+  pigeonResult.licenseUrl = licenseUrl;
+  pigeonResult.certificateUrl = certificateUrl;
+  pigeonResult.headers = headers;
+  return pigeonResult;
+}
++ (MediaDrmConfiguration *)fromList:(NSArray *)list {
+  MediaDrmConfiguration *pigeonResult = [[MediaDrmConfiguration alloc] init];
+  pigeonResult.licenseUrl = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.licenseUrl != nil, @"");
+  pigeonResult.certificateUrl = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.headers = GetNullableObjectAtIndex(list, 2);
+  NSAssert(pigeonResult.headers != nil, @"");
+  return pigeonResult;
+}
++ (nullable MediaDrmConfiguration *)nullableFromList:(NSArray *)list {
+  return (list) ? [MediaDrmConfiguration fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.licenseUrl ?: [NSNull null]),
+    (self.certificateUrl ?: [NSNull null]),
+    (self.headers ?: [NSNull null]),
+  ];
+}
+@end
+
 @interface PlaybackPlatformPigeonCodecReader : FlutterStandardReader
 @end
 @implementation PlaybackPlatformPigeonCodecReader
@@ -802,22 +843,24 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     case 129: 
       return [ChromecastState fromList:[self readValue]];
     case 130: 
-      return [MediaInfo fromList:[self readValue]];
+      return [MediaDrmConfiguration fromList:[self readValue]];
     case 131: 
-      return [MediaItem fromList:[self readValue]];
+      return [MediaInfo fromList:[self readValue]];
     case 132: 
-      return [MediaMetadata fromList:[self readValue]];
+      return [MediaItem fromList:[self readValue]];
     case 133: 
-      return [NpawConfig fromList:[self readValue]];
+      return [MediaMetadata fromList:[self readValue]];
     case 134: 
-      return [PlayerError fromList:[self readValue]];
+      return [NpawConfig fromList:[self readValue]];
     case 135: 
-      return [PlayerStateSnapshot fromList:[self readValue]];
+      return [PlayerError fromList:[self readValue]];
     case 136: 
-      return [PlayerTracksSnapshot fromList:[self readValue]];
+      return [PlayerStateSnapshot fromList:[self readValue]];
     case 137: 
-      return [Track fromList:[self readValue]];
+      return [PlayerTracksSnapshot fromList:[self readValue]];
     case 138: 
+      return [Track fromList:[self readValue]];
+    case 139: 
       return [VideoSize fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -835,32 +878,35 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   } else if ([value isKindOfClass:[ChromecastState class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[MediaInfo class]]) {
+  } else if ([value isKindOfClass:[MediaDrmConfiguration class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[MediaItem class]]) {
+  } else if ([value isKindOfClass:[MediaInfo class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[MediaMetadata class]]) {
+  } else if ([value isKindOfClass:[MediaItem class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[NpawConfig class]]) {
+  } else if ([value isKindOfClass:[MediaMetadata class]]) {
     [self writeByte:133];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PlayerError class]]) {
+  } else if ([value isKindOfClass:[NpawConfig class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PlayerStateSnapshot class]]) {
+  } else if ([value isKindOfClass:[PlayerError class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PlayerTracksSnapshot class]]) {
+  } else if ([value isKindOfClass:[PlayerStateSnapshot class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[Track class]]) {
+  } else if ([value isKindOfClass:[PlayerTracksSnapshot class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[VideoSize class]]) {
+  } else if ([value isKindOfClass:[Track class]]) {
     [self writeByte:138];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[VideoSize class]]) {
+    [self writeByte:139];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -1472,28 +1518,30 @@ void PlaybackPlatformPigeonSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
     case 128: 
-      return [MediaItem fromList:[self readValue]];
+      return [MediaDrmConfiguration fromList:[self readValue]];
     case 129: 
-      return [MediaItemTransitionEvent fromList:[self readValue]];
+      return [MediaItem fromList:[self readValue]];
     case 130: 
-      return [MediaMetadata fromList:[self readValue]];
+      return [MediaItemTransitionEvent fromList:[self readValue]];
     case 131: 
-      return [PictureInPictureModeChangedEvent fromList:[self readValue]];
+      return [MediaMetadata fromList:[self readValue]];
     case 132: 
-      return [PlaybackEndedEvent fromList:[self readValue]];
+      return [PictureInPictureModeChangedEvent fromList:[self readValue]];
     case 133: 
-      return [PlaybackStateChangedEvent fromList:[self readValue]];
+      return [PlaybackEndedEvent fromList:[self readValue]];
     case 134: 
-      return [PlayerError fromList:[self readValue]];
+      return [PlaybackStateChangedEvent fromList:[self readValue]];
     case 135: 
-      return [PlayerStateSnapshot fromList:[self readValue]];
+      return [PlayerError fromList:[self readValue]];
     case 136: 
-      return [PlayerStateUpdateEvent fromList:[self readValue]];
+      return [PlayerStateSnapshot fromList:[self readValue]];
     case 137: 
-      return [PositionDiscontinuityEvent fromList:[self readValue]];
+      return [PlayerStateUpdateEvent fromList:[self readValue]];
     case 138: 
-      return [PrimaryPlayerChangedEvent fromList:[self readValue]];
+      return [PositionDiscontinuityEvent fromList:[self readValue]];
     case 139: 
+      return [PrimaryPlayerChangedEvent fromList:[self readValue]];
+    case 140: 
       return [VideoSize fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -1505,41 +1553,44 @@ void PlaybackPlatformPigeonSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
 @end
 @implementation PlaybackListenerPigeonCodecWriter
 - (void)writeValue:(id)value {
-  if ([value isKindOfClass:[MediaItem class]]) {
+  if ([value isKindOfClass:[MediaDrmConfiguration class]]) {
     [self writeByte:128];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[MediaItemTransitionEvent class]]) {
+  } else if ([value isKindOfClass:[MediaItem class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[MediaMetadata class]]) {
+  } else if ([value isKindOfClass:[MediaItemTransitionEvent class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PictureInPictureModeChangedEvent class]]) {
+  } else if ([value isKindOfClass:[MediaMetadata class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PlaybackEndedEvent class]]) {
+  } else if ([value isKindOfClass:[PictureInPictureModeChangedEvent class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PlaybackStateChangedEvent class]]) {
+  } else if ([value isKindOfClass:[PlaybackEndedEvent class]]) {
     [self writeByte:133];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PlayerError class]]) {
+  } else if ([value isKindOfClass:[PlaybackStateChangedEvent class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PlayerStateSnapshot class]]) {
+  } else if ([value isKindOfClass:[PlayerError class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PlayerStateUpdateEvent class]]) {
+  } else if ([value isKindOfClass:[PlayerStateSnapshot class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PositionDiscontinuityEvent class]]) {
+  } else if ([value isKindOfClass:[PlayerStateUpdateEvent class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PrimaryPlayerChangedEvent class]]) {
+  } else if ([value isKindOfClass:[PositionDiscontinuityEvent class]]) {
     [self writeByte:138];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[VideoSize class]]) {
+  } else if ([value isKindOfClass:[PrimaryPlayerChangedEvent class]]) {
     [self writeByte:139];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[VideoSize class]]) {
+    [self writeByte:140];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
