@@ -6,7 +6,6 @@ import android.view.Surface
 import android.view.WindowManager
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
-import androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT
 import androidx.media3.common.ForwardingPlayer
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
@@ -43,6 +42,11 @@ import android.os.Bundle
 import androidx.media3.common.MediaMetadata
 import media.bcc.bccm_player.players.chromecast.CastMediaItemConverter.Companion.PLAYER_DATA_MIME_TYPE
 import media.bcc.bccm_player.players.chromecast.CastMediaItemConverter.Companion.BCCM_META_EXTRAS
+import androidx.media3.common.util.Util
+import androidx.core.net.toUri
+import androidx.media3.exoplayer.dash.DashMediaSource
+import androidx.media3.exoplayer.dash.DefaultDashChunkSource
+import androidx.media3.datasource.DefaultDataSource
 
 class ExoPlayerController(
     private val context: Context,
@@ -55,7 +59,7 @@ class ExoPlayerController(
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(context)
         .setTrackSelector(trackSelector)
         .setAudioAttributes(AudioAttributes.DEFAULT, true)
-        .setVideoScalingMode(VIDEO_SCALING_MODE_SCALE_TO_FIT)
+        .setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT)
         .setMediaSourceFactory(
             DefaultMediaSourceFactory(context).setDataSourceFactory(
                 CacheDataSource.Factory()
@@ -338,6 +342,10 @@ class ExoPlayerController(
         }
     }
 
+    private val dataSourceFactory by lazy {
+        DefaultDataSource.Factory(context)
+    }
+
     override fun mapMediaItem(mediaItem: PlaybackPlatformApi.MediaItem): MediaItem {
         Log.d("kxc-bccm", "mapMediaItem called on ExoPlayerController")
         val metaBuilder = MediaMetadata.Builder()
@@ -371,9 +379,39 @@ class ExoPlayerController(
             .setArtist(mediaItem.metadata?.artist)
             .setExtras(exoExtras).build()
 
-        return MediaItem.Builder()
-            .setUri(mediaItem.url)
-            .setMimeType(mimeType)
-            .setMediaMetadata(metaBuilder.build()).build()
+        return when (val type = Util.inferContentType(mediaItem.url!!)) {
+            C.CONTENT_TYPE_DASH -> {
+                val drmConfigurationBuilder = MediaItem.DrmConfiguration.Builder(C.WIDEVINE_UUID)
+                val requestHeaders = mutableMapOf<String, String>()
+                mediaItem.drm?.let {
+                    if (it.headers != null) {
+                        for (item in it.headers!!) { requestHeaders[item.key] = item.value }
+                    }
+                    drmConfigurationBuilder
+                        .setLicenseUri(it.licenseUrl!!)
+                        .setMultiSession(false)
+                        .setLicenseRequestHeaders(requestHeaders)
+                }
+
+                val mediaItemBuilder = MediaItem.Builder()
+                    .setUri(mediaItem.url)
+                    .setMimeType(mimeType)
+                    .setMediaMetadata(metaBuilder.build())
+                    .setDrmConfiguration(drmConfigurationBuilder.build())
+
+                DashMediaSource.Factory(
+                    DefaultDashChunkSource.Factory(dataSourceFactory),
+                    dataSourceFactory
+                ).createMediaSource(mediaItemBuilder.build()).mediaItem
+            }
+
+            else -> {
+                MediaItem.Builder()
+                    .setUri(mediaItem.url)
+                    .setMimeType(mimeType)
+                    .setMediaMetadata(metaBuilder.build())
+                    .build()
+            }
+        }
     }
 }
