@@ -13,7 +13,6 @@ import 'examples/downloader.dart';
 
 Future main() async {
   await BccmPlayerInterface.instance.setup();
-
   // FocusDebugger.instance.activate();
 
   runApp(const MyApp());
