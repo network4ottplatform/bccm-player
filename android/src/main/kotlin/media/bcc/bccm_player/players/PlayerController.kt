@@ -245,7 +245,8 @@ abstract class PlayerController : Player.Listener {
                 Player.STATE_ENDED,
                 Player.STATE_IDLE
             ).contains(player.playbackState)
-        ) PlaybackPlatformApi.PlaybackState.PLAYING else PlaybackPlatformApi.PlaybackState.PAUSED;
+        ) PlaybackPlatformApi.PlaybackState.PLAYING else if (!player.isPlaying && arrayOf(Player.STATE_ENDED).contains(player.playbackState))
+        PlaybackPlatformApi.PlaybackState.STOPPED else PlaybackPlatformApi.PlaybackState.PAUSED;
     }
 
     fun getPlayerStateSnapshot(): PlaybackPlatformApi.PlayerStateSnapshot {
