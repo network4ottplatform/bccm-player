@@ -47,9 +47,9 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ],
                 bottom: const TabBar(tabs: [
+                  Tab(text: 'Simple player'),
                   Tab(text: 'Playground'),
                   Tab(text: 'List Of Players'),
-                  Tab(text: 'Simple player'),
                   Tab(text: 'Custom controls'),
                   Tab(text: 'Native controls'),
                   Tab(text: 'Downloader')
@@ -58,9 +58,9 @@ class _MyAppState extends State<MyApp> {
               // tabs with Playground #1 then a new "ListOfPlayers" tab at #2 and controls to navigate between the tabs
               body: const TabBarView(
                 children: [
+                  SimplePlayer(),
                   Playground(),
                   ListOfPlayers(),
-                  SimplePlayer(),
                   CustomControls(),
                   NativeControls(),
                   Downloader(),

@@ -9,24 +9,27 @@ class SimplePlayer extends StatefulWidget {
 }
 
 class _SimplePlayerState extends State<SimplePlayer> {
-  late BccmPlayerController playerController;
+  late BccmPlayerViewController viewPlayerController;
 
   @override
   void initState() {
-    playerController = BccmPlayerController(
-      MediaItem(
-        url: 'https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8',
-        mimeType: 'application/x-mpegURL',
-        metadata: MediaMetadata(title: 'Apple advanced (HLS/HDR)'),
+    viewPlayerController = BccmPlayerViewController(
+      playerController: BccmPlayerController(
+        MediaItem(
+          url: 'https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8',
+          mimeType: 'application/x-mpegURL',
+          metadata: MediaMetadata(title: 'Apple advanced (HLS/HDR)'),
+        ),
       ),
     );
-    playerController.initialize().then((_) => playerController.setMixWithOthers(true)); // if you want to play together with other videos
+    viewPlayerController.playerController.initialize();
+    viewPlayerController.playerController.play();
     super.initState();
   }
 
   @override
   void dispose() {
-    playerController.dispose();
+    viewPlayerController.playerController.dispose();
     super.dispose();
   }
 
@@ -36,18 +39,20 @@ class _SimplePlayerState extends State<SimplePlayer> {
       children: [
         Column(
           children: [
-            BccmPlayerView(playerController),
+            BccmPlayerView.withViewController(
+              viewPlayerController,
+            ),
             ElevatedButton(
               onPressed: () {
-                playerController.setPrimary();
+                viewPlayerController.playerController.setPrimary();
               },
               child: const Text('Make primary'),
             ),
             ElevatedButton(
               onPressed: () {
-                final currentMs = playerController.value.playbackPositionMs;
+                final currentMs = viewPlayerController.playerController.value.playbackPositionMs;
                 if (currentMs != null) {
-                  playerController.seekTo(Duration(milliseconds: currentMs + 20000));
+                  viewPlayerController.playerController.seekTo(Duration(milliseconds: currentMs + 20000));
                 }
               },
               child: const Text('Skip 20 seconds'),

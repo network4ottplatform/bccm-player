@@ -27,6 +27,7 @@ dependencies:
   state_notifier: ^1.0.0
   universal_io: ^2.0.4
   wakelock_plus: ^1.1.1
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:

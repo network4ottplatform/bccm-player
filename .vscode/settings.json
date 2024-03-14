@@ -1,11 +1,14 @@
 {
   "dart.lineLength": 150,
   "[dart]": {
-    "editor.rulers": [150]
+    "editor.rulers": [
+      150
+    ]
   },
   "git.autoRepositoryDetection": "openEditors",
   "git.detectSubmodules": false,
   "files.associations": {
     "*.dart.template": "dart"
-  }
+  },
+  "dart.flutterSdkPath": ".fvm/versions/3.19.0"
 }

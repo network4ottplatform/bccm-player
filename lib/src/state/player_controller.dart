@@ -1,7 +1,8 @@
+import 'package:bccm_player/src/model/subtitles/external_subtitle_object.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:state_notifier/state_notifier.dart';
-import 'package:collection/collection.dart';
 
 import '../../bccm_player.dart';
 
@@ -29,6 +30,15 @@ class BccmPlayerController extends ValueNotifier<PlayerState> {
   bool _isDisposed = false;
   final BufferMode? _bufferMode;
   final bool? _disableNpaw;
+  ExternalSubtitleController? _subtitleController;
+  ExternalSubtitleData? _currentSubtitle;
+
+  List<ExternalSubtitleData> externalSubtitles = <ExternalSubtitleData>[];
+
+  ExternalSubtitleData get currentSubtitle {
+    if (_currentSubtitle != null) return _currentSubtitle!;
+    return const ExternalSubtitleData(sequenceNumber: -1, start: Duration(), end: Duration(), text: '');
+  }
 
   static BccmPlayerController get primary => BccmPlayerInterface.instance.primaryController;
 
@@ -69,10 +79,15 @@ class BccmPlayerController extends ValueNotifier<PlayerState> {
   /// See also:
   ///
   /// * [BccmPlayerController.networkUrl] for a convenience constructor to create a [BccmPlayerController] with a network url.
-  BccmPlayerController(MediaItem mediaItem, {BufferMode? bufferMode, bool? disableNpaw})
-      : _intialMediaItem = mediaItem,
+  BccmPlayerController(
+    MediaItem mediaItem, {
+    BufferMode? bufferMode,
+    bool? disableNpaw,
+    ExternalSubtitleController? subtitleController,
+  })  : _intialMediaItem = mediaItem,
         _bufferMode = bufferMode,
         _disableNpaw = disableNpaw,
+        _subtitleController = subtitleController,
         super(const PlayerState(
           playerId: 'unknown',
           isInitialized: false,
@@ -98,12 +113,14 @@ class BccmPlayerController extends ValueNotifier<PlayerState> {
     String? mimeType,
     BufferMode? bufferMode,
     bool? disableNpaw,
+    ExternalSubtitleController? subtitleController,
   })  : _intialMediaItem = MediaItem(
           url: url.toString(),
           mimeType: mimeType,
         ),
         _bufferMode = bufferMode,
         _disableNpaw = disableNpaw,
+        _subtitleController = subtitleController,
         super(const PlayerState(playerId: 'unknown', isInitialized: false));
 
   /// Checks if this player is the current primary player.
@@ -139,6 +156,9 @@ class BccmPlayerController extends ValueNotifier<PlayerState> {
     }
     _isDisposed = true;
     _removeStateListener?.call();
+    _subtitleController = null;
+    externalSubtitles.clear();
+    _currentSubtitle = null;
     super.dispose();
     return BccmPlayerInterface.instance.disposePlayer(value.playerId);
   }
@@ -163,12 +183,14 @@ class BccmPlayerController extends ValueNotifier<PlayerState> {
 
   Future<void> _initialize() async {
     final playerId = await BccmPlayerInterface.instance.newPlayer(bufferMode: _bufferMode, disableNpaw: _disableNpaw);
+    if (_subtitleController != null) {
+      final raw = await _subtitleController?.getSubtitle();
+      if (raw != null) externalSubtitles = raw.extractSubtitles();
+    }
     if (_intialMediaItem != null) {
       await BccmPlayerInterface.instance.replaceCurrentMediaItem(playerId, _intialMediaItem!);
     }
-    if (_isDisposed) {
-      return;
-    }
+    if (_isDisposed) return;
     final notifier = BccmPlayerInterface.instance.stateNotifier.getOrAddPlayerNotifier(playerId);
     _listenToNotifier(notifier);
   }
@@ -334,16 +356,53 @@ class BccmPlayerController extends ValueNotifier<PlayerState> {
     _removeStateListener?.call();
     _removeStateListener = notifier.addListener((state) {
       value = state;
+      if (state.playbackPositionMs != null) {
+        _currentSubtitle = _findSubtitle(Duration(milliseconds: state.playbackPositionMs ?? 0));
+      }
     });
     _stateNotifier = notifier;
   }
 
-  Stream get events => BccmPlayerInterface.instance.playerEventStream.where((event) {
-        if (_isDisposed) return false;
-        try {
-          return event.playerId == value.playerId;
-        } catch (e) {
-          return false; // hacky try-catch because pigeon doesn't support inheritance: https://github.com/flutter/flutter/issues/117819
-        }
-      });
+  Stream get events {
+    return BccmPlayerInterface.instance.playerEventStream.where((event) {
+      if (_isDisposed) return false;
+      try {
+        return event.playerId == value.playerId;
+      } catch (e) {
+        return false; // hacky try-catch because pigeon doesn't support inheritance: https://github.com/flutter/flutter/issues/117819
+      }
+    });
+  }
+
+  ExternalSubtitleData? _findSubtitle(Duration duration) {
+    if (externalSubtitles.isEmpty) return null;
+    const l = 0;
+    final r = externalSubtitles.length - 1;
+
+    var index = _binarySearch(l, r, duration);
+    if (index > -1) return externalSubtitles[index];
+    return null;
+  }
+
+  int _binarySearch(int l, int r, Duration duration) {
+    if (r >= l) {
+      var mid = l + (r - l) ~/ 2;
+
+      if (externalSubtitles[mid].inRange(duration)) return mid;
+
+      // If element is smaller than mid, then
+      // it can only be present in left subarray
+      if (externalSubtitles[mid].isLarg(duration)) {
+        return _binarySearch(mid + 1, r, duration);
+      }
+
+      // Else the element can only be present
+      // in right subarray
+      return _binarySearch(l, mid - 1, duration);
+    }
+
+    // We reach here when element is not present
+    // in array
+    return -1;
+  }
 }

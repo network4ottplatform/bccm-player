@@ -22,6 +22,8 @@ export 'src/pigeon/playback_platform_pigeon.g.dart'
         BufferMode,
         PictureInPictureModeChangedEvent,
         MediaDrmConfiguration;
+export 'src/model/subtitle_data.dart';
+export 'src/state/external_subtitle_controller.dart';
 export 'src/state/player_state_notifier.dart';
 export 'src/state/plugin_state_notifier.dart';
 export 'src/state/player_controller.dart';

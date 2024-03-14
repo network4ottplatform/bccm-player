@@ -1,5 +1,5 @@
 import 'package:bccm_player/bccm_player.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../controls/default_controls.dart';
 
@@ -16,6 +16,7 @@ class _ControlledBccmPlayerViewState extends State<ControlledBccmPlayerView> {
   late bool isChromecast;
 
   void onPlayerControllerUpdate() {
+    setState(() {});
     if (isChromecast == widget.viewController.playerController.isChromecast) return;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
@@ -99,6 +100,20 @@ class _ControlledBccmPlayerViewState extends State<ControlledBccmPlayerView> {
                   }),
                 ),
               ),
+              if (viewController.playerController.externalSubtitles.isNotEmpty)
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      child: Text(
+                        viewController.playerController.currentSubtitle.text,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
               Positioned.fill(
                 child: Builder(builder: (context) {
                   final controlsBuilder = viewController.config.controlsConfig.customBuilder ?? DefaultControls.builder;

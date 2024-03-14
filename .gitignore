@@ -33,3 +33,6 @@ build/
 
 # Mkdocs (has own branch)
 site
+
+# FVM Version Cache
+.fvm/

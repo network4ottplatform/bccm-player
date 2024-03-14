@@ -1,0 +1,1 @@
+enum SubtitleType { srt, vtt }
