@@ -389,7 +389,7 @@ class ExoPlayerController(
                     }
                     drmConfigurationBuilder
                         .setLicenseUri(it.licenseUrl!!)
-                        .setMultiSession(false)
+                        .setMultiSession(true)
                         .setLicenseRequestHeaders(requestHeaders)
                 }
 
