@@ -421,6 +421,7 @@ class CastPlayerController: NSObject, PlayerController {
             withUrl: "",
             mimeType: mimeType,
             metadata: mappedMetadata,
+            drm: nil,
             isLive: isLive as NSNumber,
             isOffline: false,
             playbackStartPositionMs: nil,
