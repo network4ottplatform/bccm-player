@@ -50,8 +50,8 @@ class MediaItemMapper {
         let mediaItem = MediaItem.make(
             withUrl: asset.url.absoluteString,
             mimeType: mimeType,
-            drm: nil,
             metadata: metadata,
+            drm: nil,
             isLive: isLive as NSNumber,
             isOffline: isOffline as NSNumber?,
             playbackStartPositionMs: nil,
