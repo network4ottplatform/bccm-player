@@ -52,6 +52,8 @@ class MediaItemMapper {
             mimeType: mimeType,
             metadata: metadata,
             drm: nil,
+            castUrl: "",
+            castMimeType: "",
             isLive: isLive as NSNumber,
             isOffline: isOffline as NSNumber?,
             playbackStartPositionMs: nil,
