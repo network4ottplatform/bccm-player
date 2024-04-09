@@ -552,7 +552,7 @@ public class AVQueuePlayerController: NSObject, PlayerController, AVPlayerViewCo
             }
             
            if let castUrl = mediaItem.castUrl {
-                if let metadataItem = MetadataUtils.metadataItem(identifier: PlayerMetadataConstants.CastUrl, value: castMmimeType as (NSCopying & NSObjectProtocol)?, namespace: .BccmPlayer) {
+                if let metadataItem = MetadataUtils.metadataItem(identifier: PlayerMetadataConstants.CastUrl, value: castUrl as (NSCopying & NSObjectProtocol)?, namespace: .BccmPlayer) {
                     allItems.append(metadataItem)
                 }
             }
@@ -560,7 +560,7 @@ public class AVQueuePlayerController: NSObject, PlayerController, AVPlayerViewCo
 
             
             if let castMimeType = mediaItem.castMimeType {
-                if let metadataItem = MetadataUtils.metadataItem(identifier: PlayerMetadataConstants.CastMimeType, value: castMmimeType as (NSCopying & NSObjectProtocol)?, namespace: .BccmPlayer) {
+                if let metadataItem = MetadataUtils.metadataItem(identifier: PlayerMetadataConstants.CastMimeType, value: castMimeType as (NSCopying & NSObjectProtocol)?, namespace: .BccmPlayer) {
                     allItems.append(metadataItem)
                 }
             }
