@@ -40,6 +40,10 @@ class MediaItemMapper {
         }
         let mimeType: String? = playerData?[PlayerMetadataConstants.MimeType]
 
+        let castUrl: String? = playerData?[PlayerMetadataConstants.CastUrl]
+        
+        let castMimeTtype: String? = playerData?[PlayerMetadataConstants.CastMimeType]
+        
         var isLive = CMTIME_IS_INDEFINITE(playerItem.duration)
         if let isLiveMeta = playerData?[PlayerMetadataConstants.IsLive] {
             isLive = isLiveMeta == "true"
@@ -52,8 +56,8 @@ class MediaItemMapper {
             mimeType: mimeType,
             metadata: metadata,
             drm: nil,
-            castUrl: "",
-            castMimeType: "",
+            castUrl: castUrl,
+            castMimeType: castMimeType,
             isLive: isLive as NSNumber,
             isOffline: isOffline as NSNumber?,
             playbackStartPositionMs: nil,
