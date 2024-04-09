@@ -264,7 +264,7 @@ class CastPlayerController: NSObject, PlayerController {
     }
     
     func mapMediaItemToMediaInformation(_ mediaItem: MediaItem) -> GCKMediaInformation? {
-        guard let urlString = mediaItem.url, let url = URL(string: urlString) else {
+        guard let urlString = mediaItem.castUrl, let url = URL(string: urlString) else {
             return nil
         }
         let mediaInfoBuilder = GCKMediaInformationBuilder(contentURL: url)
@@ -277,7 +277,7 @@ class CastPlayerController: NSObject, PlayerController {
             playerData[PlayerMetadataConstants.IsOffline] = "true"
         }
         
-        if let mimeType = mediaItem.mimeType {
+        if let mimeType = mediaItem.castMimeType {
             mediaInfoBuilder.contentType = mimeType
         }
         
