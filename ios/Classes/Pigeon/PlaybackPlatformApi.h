@@ -121,6 +121,8 @@ typedef NS_ENUM(NSUInteger, TrackType) {
     mimeType:(nullable NSString *)mimeType
     metadata:(nullable MediaMetadata *)metadata
     drm:(nullable MediaDrmConfiguration *)drm
+    castUrl: (nullable NSString *)castUrl
+    castMimeType:(nullable NSString *)castMimeType
     isLive:(nullable NSNumber *)isLive
     isOffline:(nullable NSNumber *)isOffline
     playbackStartPositionMs:(nullable NSNumber *)playbackStartPositionMs
@@ -130,6 +132,8 @@ typedef NS_ENUM(NSUInteger, TrackType) {
 @property(nonatomic, copy, nullable) NSString * mimeType;
 @property(nonatomic, strong, nullable) MediaMetadata * metadata;
 @property(nonatomic, strong, nullable) MediaDrmConfiguration * drm;
+@property(nonatomic, copy, nullable) NSString * castUrl;
+@property(nonatomic, copy, nullable) NSString * castMimeType;
 @property(nonatomic, strong, nullable) NSNumber * isLive;
 @property(nonatomic, strong, nullable) NSNumber * isOffline;
 @property(nonatomic, strong, nullable) NSNumber * playbackStartPositionMs;
