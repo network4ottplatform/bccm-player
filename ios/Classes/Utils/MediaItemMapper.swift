@@ -42,7 +42,7 @@ class MediaItemMapper {
 
         let castUrl: String? = playerData?[PlayerMetadataConstants.CastUrl]
         
-        let castMimeTtype: String? = playerData?[PlayerMetadataConstants.CastMimeType]
+        let castMimeType: String? = playerData?[PlayerMetadataConstants.CastMimeType]
         
         var isLive = CMTIME_IS_INDEFINITE(playerItem.duration)
         if let isLiveMeta = playerData?[PlayerMetadataConstants.IsLive] {
