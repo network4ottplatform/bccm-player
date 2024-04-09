@@ -423,7 +423,7 @@ class CastPlayerController: NSObject, PlayerController {
             metadata: mappedMetadata,
             drm: nil,
             castUrl: "",
-            castMimeType: "".
+            castMimeType: "",
             isLive: isLive as NSNumber,
             isOffline: false,
             playbackStartPositionMs: nil,
