@@ -11,4 +11,7 @@ enum PlayerMetadataConstants {
     static let IsLive = "is_live"
     static let IsOffline = "is_offline"
     static let ArtworkUri = "artwork_uri"
+    static let CastUrl = "cast_url"
+    static let CastMimeType = "cast_mime_type"
+    
 }
