@@ -121,6 +121,8 @@ class MediaItem {
     this.mimeType,
     this.metadata,
     this.drm,
+    this.castUrl,
+    this.castMimeType,
     this.isLive,
     this.isOffline,
     this.playbackStartPositionMs,
@@ -135,6 +137,10 @@ class MediaItem {
   MediaMetadata? metadata;
 
   MediaDrmConfiguration? drm;
+
+  String? castUrl;
+
+  String? castmimeType;
 
   bool? isLive;
 
@@ -152,6 +158,8 @@ class MediaItem {
       mimeType,
       metadata?.encode(),
       drm?.encode(),
+      castUrl,
+      castMimeType,
       isLive,
       isOffline,
       playbackStartPositionMs,
@@ -171,11 +179,13 @@ class MediaItem {
       drm: result[3] != null
           ? MediaDrmConfiguration.decode(result[3]! as List<Object?>)
           : null,
-      isLive: result[4] as bool?,
-      isOffline: result[5] as bool?,
-      playbackStartPositionMs: result[6] as double?,
-      lastKnownAudioLanguage: result[7] as String?,
-      lastKnownSubtitleLanguage: result[8] as String?,
+      castUrl: result[4] as String?,
+      castMimeType: result[5] as String?,
+      isLive: result[6] as bool?,
+      isOffline: result[7] as bool?,
+      playbackStartPositionMs: result[8] as double?,
+      lastKnownAudioLanguage: result[9] as String?,
+      lastKnownSubtitleLanguage: result[10] as String?,
     );
   }
 }
