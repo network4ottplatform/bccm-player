@@ -550,6 +550,22 @@ public class AVQueuePlayerController: NSObject, PlayerController, AVPlayerViewCo
                     allItems.append(metadataItem)
                 }
             }
+            
+           if let castUrl = mediaItem.castUrl {
+                if let metadataItem = MetadataUtils.metadataItem(identifier: PlayerMetadataConstants.CastUrl, value: castMmimeType as (NSCopying & NSObjectProtocol)?, namespace: .BccmPlayer) {
+                    allItems.append(metadataItem)
+                }
+            }
+
+
+            
+            if let castMimeType = mediaItem.castMimeType {
+                if let metadataItem = MetadataUtils.metadataItem(identifier: PlayerMetadataConstants.CastMimeType, value: castMmimeType as (NSCopying & NSObjectProtocol)?, namespace: .BccmPlayer) {
+                    allItems.append(metadataItem)
+                }
+            }
+
+            
             if let isLive = mediaItem.isLive {
                 if let metadataItem = MetadataUtils.metadataItem(identifier: PlayerMetadataConstants.IsLive, value: (isLive.boolValue ? "true" : "false") as (NSCopying & NSObjectProtocol), namespace: .BccmPlayer) {
                     allItems.append(metadataItem)
