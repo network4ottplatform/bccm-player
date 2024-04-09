@@ -140,7 +140,7 @@ class MediaItem {
 
   String? castUrl;
 
-  String? castmimeType;
+  String? castMimeType;
 
   bool? isLive;
 
