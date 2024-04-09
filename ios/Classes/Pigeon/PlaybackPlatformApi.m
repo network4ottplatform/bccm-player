@@ -267,6 +267,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     mimeType:(nullable NSString *)mimeType
     metadata:(nullable MediaMetadata *)metadata
     drm:(nullable MediaDrmConfiguration *)drm
+    castUrl:(nullable NSString *)castUrl
+    castMimeType:(nullable NSString *)castMimeType
     isLive:(nullable NSNumber *)isLive
     isOffline:(nullable NSNumber *)isOffline
     playbackStartPositionMs:(nullable NSNumber *)playbackStartPositionMs
@@ -277,6 +279,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.mimeType = mimeType;
   pigeonResult.metadata = metadata;
   pigeonResult.drm = drm;
+  pigeonResult.castUrl = castUrl;
+  pigeonResult.castMimeType = castMimeType;
   pigeonResult.isLive = isLive;
   pigeonResult.isOffline = isOffline;
   pigeonResult.playbackStartPositionMs = playbackStartPositionMs;
@@ -290,11 +294,13 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.mimeType = GetNullableObjectAtIndex(list, 1);
   pigeonResult.metadata = [MediaMetadata nullableFromList:(GetNullableObjectAtIndex(list, 2))];
   pigeonResult.drm = [MediaDrmConfiguration nullableFromList:(GetNullableObjectAtIndex(list, 3))];
-  pigeonResult.isLive = GetNullableObjectAtIndex(list, 4);
-  pigeonResult.isOffline = GetNullableObjectAtIndex(list, 5);
-  pigeonResult.playbackStartPositionMs = GetNullableObjectAtIndex(list, 6);
-  pigeonResult.lastKnownAudioLanguage = GetNullableObjectAtIndex(list, 7);
-  pigeonResult.lastKnownSubtitleLanguage = GetNullableObjectAtIndex(list, 8);
+  pigeonResult.castUrl = GetNullableObjectAtIndex(list, 4);
+  pigeonResult.castMimeType = GetNullableObjectAtIndex(list, 5);
+  pigeonResult.isLive = GetNullableObjectAtIndex(list, 6);
+  pigeonResult.isOffline = GetNullableObjectAtIndex(list, 7);
+  pigeonResult.playbackStartPositionMs = GetNullableObjectAtIndex(list, 8);
+  pigeonResult.lastKnownAudioLanguage = GetNullableObjectAtIndex(list, 9);
+  pigeonResult.lastKnownSubtitleLanguage = GetNullableObjectAtIndex(list, 10);
   return pigeonResult;
 }
 + (nullable MediaItem *)nullableFromList:(NSArray *)list {
@@ -306,6 +312,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     (self.mimeType ?: [NSNull null]),
     (self.metadata ? [self.metadata toList] : [NSNull null]),
     (self.drm ? [self.drm toList] : [NSNull null]),
+    (self.castUrl ?: [NSNull null]),
+    (self.castMimeType ?: [NSNull null]),
     (self.isLive ?: [NSNull null]),
     (self.isOffline ?: [NSNull null]),
     (self.playbackStartPositionMs ?: [NSNull null]),
