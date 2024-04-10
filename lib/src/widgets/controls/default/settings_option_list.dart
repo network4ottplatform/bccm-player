@@ -20,6 +20,12 @@ Future<SettingsOption<T>?> showModalOptionList<T>({required BuildContext context
      constraints: BoxConstraints(
            maxWidth:  480,              
         ),
+    shape:  const RoundedRectangleBorder(
+    borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(10.0),
+        topRight: Radius.circular(10.0)
+    ),
+  ),
     isDismissible: true,
                 isScrollControlled: true,
 
