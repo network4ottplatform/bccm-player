@@ -17,6 +17,9 @@ class SettingsOption<T> {
 Future<SettingsOption<T>?> showModalOptionList<T>({required BuildContext context, required List<SettingsOption<T>> options}) async {
   return await showModalBottomSheet<SettingsOption<T>>(
     context: context,
+     constraints: BoxConstraints(
+           maxWidth:  480,              
+        ),
     isDismissible: true,
     builder: (context) => SettingsOptionList<T>(
       onSelect: (option) {
