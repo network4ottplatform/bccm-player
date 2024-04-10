@@ -21,6 +21,8 @@ Future<SettingsOption<T>?> showModalOptionList<T>({required BuildContext context
            maxWidth:  480,              
         ),
     isDismissible: true,
+                isScrollControlled: true,
+
     builder: (context) => SettingsOptionList<T>(
       onSelect: (option) {
         // select this track
