@@ -42,6 +42,8 @@ class SettingsButton extends HookWidget {
            maxWidth:  480,              
         ),
         isDismissible: true,
+                    isScrollControlled: true,
+
         builder: (context) => _SettingsBottomSheet(viewController: viewController),
       );
     }
