@@ -38,6 +38,9 @@ class SettingsButton extends HookWidget {
       // open bottom sheet with settings
       showModalBottomSheet(
         context: context,
+        constraints: BoxConstraints(
+           maxWidth:  480,              
+        ),
         isDismissible: true,
         builder: (context) => _SettingsBottomSheet(viewController: viewController),
       );
