@@ -18,11 +18,7 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
- <style name="Theme.MyTheme">
-     <item name="castExpandedControllerStyle">
-         @style/CustomCastExpandedController
-     </item>
- </style>
+
 
  <style name="CustomCastExpandedController" parent="CastExpandedController">
      <item name="castControlButtons">
