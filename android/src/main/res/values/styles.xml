@@ -23,7 +23,7 @@
 
 
 
- <style name="CustomCastExpandedController" parent="CastExpandedController">
+ <style name="CustomCastExpandedControllerStyle" parent="CastExpandedController">
      <item name="castControlButtons">
          @array/cast_expanded_controller_control_buttons
      </item>
