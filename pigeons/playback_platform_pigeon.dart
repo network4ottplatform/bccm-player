@@ -172,8 +172,8 @@ class MediaItem {
   final String? mimeType;
   final MediaMetadata? metadata;
   final MediaDrmConfiguration? drm;
-  final String? castUrl,
-  final String? castMimeType,
+  final String? castUrl;
+  final String? castMimeType;
   final bool? isLive;
   final bool? isOffline;
   final double? playbackStartPositionMs;
