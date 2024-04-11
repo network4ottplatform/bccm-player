@@ -14,6 +14,8 @@ func setupCast() {
     }
     let criteria = GCKDiscoveryCriteria(applicationID: appId)
     let options = GCKCastOptions(discoveryCriteria: criteria)
+    options.physicalVolumeButtonsWillControlDeviceVolume = true
+
     GCKCastContext.setSharedInstanceWith(options)
     let styler = GCKUIStyle.sharedInstance()
     styler.castViews.mediaControl.expandedController.backgroundImageContentMode = UIImageView.ContentMode.scaleAspectFit.rawValue as NSNumber
