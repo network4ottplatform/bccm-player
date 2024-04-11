@@ -401,6 +401,26 @@ public class PlaybackPlatformApi {
       this.drm = setterArg;
     }
 
+    private @Nullable String castUrl;
+
+    public @Nullable String getCastUrl() {
+      return castUrl;
+    }
+
+    public void setCastUrl(@Nullable String setterArg) {
+      this.castUrl = setterArg;
+    }
+
+    private @Nullable String castMimeType;
+
+    public @Nullable String getCastMimeType() {
+      return castMimeType;
+    }
+
+    public void setCastMimeType(@Nullable String setterArg) {
+      this.castMimeType = setterArg;
+    }
+
     private @Nullable Boolean isLive;
 
     public @Nullable Boolean getIsLive() {
@@ -481,6 +501,20 @@ public class PlaybackPlatformApi {
         return this;
       }
 
+      private @Nullable String castUrl;
+
+      public @NonNull Builder setCastUrl(@Nullable String setterArg) {
+        this.castUrl = setterArg;
+        return this;
+      }
+
+      private @Nullable String castMimeType;
+
+      public @NonNull Builder setCastMimeType(@Nullable String setterArg) {
+        this.castMimeType = setterArg;
+        return this;
+      }
+
       private @Nullable Boolean isLive;
 
       public @NonNull Builder setIsLive(@Nullable Boolean setterArg) {
@@ -522,6 +556,8 @@ public class PlaybackPlatformApi {
         pigeonReturn.setMimeType(mimeType);
         pigeonReturn.setMetadata(metadata);
         pigeonReturn.setDrm(drm);
+        pigeonReturn.setCastUrl(castUrl);
+        pigeonReturn.setCastMimeType(castMimeType);
         pigeonReturn.setIsLive(isLive);
         pigeonReturn.setIsOffline(isOffline);
         pigeonReturn.setPlaybackStartPositionMs(playbackStartPositionMs);
@@ -533,11 +569,13 @@ public class PlaybackPlatformApi {
 
     @NonNull
     ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(9);
+      ArrayList<Object> toListResult = new ArrayList<Object>(11);
       toListResult.add(url);
       toListResult.add(mimeType);
       toListResult.add((metadata == null) ? null : metadata.toList());
       toListResult.add((drm == null) ? null : drm.toList());
+      toListResult.add(castUrl);
+      toListResult.add(castMimeType);
       toListResult.add(isLive);
       toListResult.add(isOffline);
       toListResult.add(playbackStartPositionMs);
@@ -556,15 +594,19 @@ public class PlaybackPlatformApi {
       pigeonResult.setMetadata((metadata == null) ? null : MediaMetadata.fromList((ArrayList<Object>) metadata));
       Object drm = list.get(3);
       pigeonResult.setDrm((drm == null) ? null : MediaDrmConfiguration.fromList((ArrayList<Object>) drm));
-      Object isLive = list.get(4);
+      Object castUrl = list.get(4);
+      pigeonResult.setCastUrl((String) castUrl);
+      Object castMimeType = list.get(5);
+      pigeonResult.setCastMimeType((String) castMimeType);
+      Object isLive = list.get(6);
       pigeonResult.setIsLive((Boolean) isLive);
-      Object isOffline = list.get(5);
+      Object isOffline = list.get(7);
       pigeonResult.setIsOffline((Boolean) isOffline);
-      Object playbackStartPositionMs = list.get(6);
+      Object playbackStartPositionMs = list.get(8);
       pigeonResult.setPlaybackStartPositionMs((Double) playbackStartPositionMs);
-      Object lastKnownAudioLanguage = list.get(7);
+      Object lastKnownAudioLanguage = list.get(9);
       pigeonResult.setLastKnownAudioLanguage((String) lastKnownAudioLanguage);
-      Object lastKnownSubtitleLanguage = list.get(8);
+      Object lastKnownSubtitleLanguage = list.get(10);
       pigeonResult.setLastKnownSubtitleLanguage((String) lastKnownSubtitleLanguage);
       return pigeonResult;
     }
