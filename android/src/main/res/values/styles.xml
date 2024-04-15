@@ -16,18 +16,12 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:backgroundDimEnabled">false</item>
-         <item name="castExpandedControllerStyle">
-        @style/CustomCastExpandedController
-    </item>
+         
     </style>
 
 
 
- <style name="CustomCastExpandedControllerStyle" parent="CastExpandedController">
-     <item name="castControlButtons">
-         @array/cast_expanded_controller_control_buttons
-     </item>
- </style>
+
 
     
 </resources>
