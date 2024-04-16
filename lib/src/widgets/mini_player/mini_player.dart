@@ -55,7 +55,10 @@ class MiniPlayer extends HookWidget {
       height: kMiniPlayerHeight,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: theme.backgroundColor,
+        
+       // color: theme.backgroundColor,
+        color: Colors.white,
+        
         border: showBorder ? Border(top: BorderSide(color: theme.topBorderColor ?? Colors.transparent, width: 1)) : null,
       ),
       padding: const EdgeInsets.symmetric(
