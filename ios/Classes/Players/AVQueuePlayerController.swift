@@ -335,11 +335,15 @@ public class AVQueuePlayerController: NSObject, PlayerController, AVPlayerViewCo
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.playCommand.isEnabled = true
         commandCenter.pauseCommand.isEnabled = true
+        commandCenter.togglePlayPauseCommand.isEnabled = true
         commandCenter.skipBackwardCommand.isEnabled = true
         commandCenter.skipBackwardCommand.preferredIntervals = [15]
         commandCenter.skipForwardCommand.isEnabled = true
         commandCenter.skipForwardCommand.preferredIntervals = [30]
 
+
+
+        
         commandCenter.playCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
             self?.player.play()
             return .success
@@ -348,6 +352,23 @@ public class AVQueuePlayerController: NSObject, PlayerController, AVPlayerViewCo
             self?.player.pause()
             return .success
         }
+
+         commandCenter.togglePlayPauseCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
+            if self?.player.timeControlStatus == .playing {
+
+                 self?.player.pause()
+
+                
+            } else {
+
+                 self?.player.play()
+
+            }
+                                                         
+            return .success
+        }
+
+        
         commandCenter.skipBackwardCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
             let currentTime = self?.player.currentTime()
             self?.player.seek(to: CMTime(seconds: currentTime!.seconds - 15, preferredTimescale: 1), completionHandler: { isCompleted in
