@@ -356,7 +356,7 @@ public class AVQueuePlayerController: NSObject, PlayerController, AVPlayerViewCo
             })            
             return .success
         }
-        commandCenter.skipBackwardCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
+        commandCenter.skipForwardCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
             let currentTime = self?.player.currentTime()
             self?.player.seek(to: CMTime(seconds: currentTime!.seconds + 30, preferredTimescale: 1), completionHandler: { isCompleted in
                 if isCompleted {
