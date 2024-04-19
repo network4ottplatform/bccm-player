@@ -219,6 +219,7 @@ public class AVQueuePlayerController: NSObject, PlayerController, AVPlayerViewCo
     
     public func hasBecomePrimary() {
         isPrimary = true
+        player.allowsExternalPlayback = true
         setupCommandCenter()
     }
     
