@@ -35,6 +35,12 @@ public class AVQueuePlayerController: NSObject, PlayerController, AVPlayerViewCo
         if bufferMode == .fastStartShortForm {
             player.automaticallyWaitsToMinimizeStalling = false
         }
+        if (!isPrimary) {
+
+             player.allowsExternalPlayback = false
+            
+        }
+        
         updateAppConfig(appConfig: appConfig)
         addObservers()
         refreshStateTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { _ in
