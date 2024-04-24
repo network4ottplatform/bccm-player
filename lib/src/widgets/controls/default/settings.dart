@@ -246,7 +246,7 @@ class _SettingsBottomSheet extends HookWidget {
     ];
 
     return Material(
-      color: controlsTheme.settingsListBackgroundColor,
+      color: Colors.white,
       child: ListView(
         shrinkWrap: true,
         children: [
