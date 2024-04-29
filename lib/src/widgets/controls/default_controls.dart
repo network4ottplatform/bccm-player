@@ -45,6 +45,7 @@ class DefaultControls extends HookWidget {
           child: SizedBox.expand(
             child: ControlsWrapper(
               autoHide: player.value.playbackState == PlaybackState.playing,
+              showByDefault: false,
               builder: (context) => SafeArea(
                 child: Stack(
                   children: [
