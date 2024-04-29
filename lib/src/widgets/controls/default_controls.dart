@@ -195,6 +195,23 @@ class DefaultControls extends HookWidget {
                                         style: controlsTheme.durationTextStyle,
                                       ),
                                     ),
+                                  if (player.value.currentMediaItem?.isLive == true)
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 8, left: 13),
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(4))),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(4),
+                                            child:Text(
+                                        'ÉLŐ',
+                                        style: controlsTheme.durationTextStyle,
+                                      ),
+                                            ),
+                                      ),
+                                    ),
                                   const Spacer(),
                                   ...?viewController.config.controlsConfig.additionalActionsBuilder?.call(context),
                                   FullscreenButton(
