@@ -229,8 +229,8 @@ class DefaultControls extends HookWidget {
                               ),
                             ),
                           ),
-                          /// if (false == true)
-                          if (player.value.currentMediaItem?.isLive == true)
+                          /// player.value.currentMediaItem?.isLive == true
+                          if (false == true)
                             const Padding(padding: EdgeInsets.only(top: 12))
                           else
                             ControlFadeOut(
