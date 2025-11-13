@@ -229,7 +229,7 @@ class DefaultControls extends HookWidget {
                               ),
                             ),
                           ),
-                           player.value.currentMediaItem?.isLive == true
+                          if ( player.value.currentMediaItem?.isLive == true)
                           //if (false == true)
                             const Padding(padding: EdgeInsets.only(top: 12))
                           else
