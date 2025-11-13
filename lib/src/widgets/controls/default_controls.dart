@@ -187,8 +187,8 @@ class DefaultControls extends HookWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  //// if (player.value.currentMediaItem?.isLive != true)
-                                  if ( true)
+                                  if (player.value.currentMediaItem?.isLive != true)
+                                  //if ( true)
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 8, left: 13),
                                       child: Text(
@@ -196,8 +196,8 @@ class DefaultControls extends HookWidget {
                                         style: controlsTheme.durationTextStyle,
                                       ),
                                     ),
-                                  //// if (player.value.currentMediaItem?.isLive == true)
-                                  if (false== true)
+                                   if (player.value.currentMediaItem?.isLive == true)
+                                 // if (false== true)
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 8, left: 13),
                                       child: Container(
@@ -229,8 +229,8 @@ class DefaultControls extends HookWidget {
                               ),
                             ),
                           ),
-                          /// player.value.currentMediaItem?.isLive == true
-                          if (false == true)
+                           player.value.currentMediaItem?.isLive == true
+                          //if (false == true)
                             const Padding(padding: EdgeInsets.only(top: 12))
                           else
                             ControlFadeOut(
