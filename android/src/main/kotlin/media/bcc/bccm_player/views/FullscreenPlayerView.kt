@@ -170,8 +170,8 @@ class FullscreenPlayerView(
             playerView.setShowFastForwardButton(false)
             playerView.setShowRewindButton(false)
             playerView.setShowMultiWindowTimeBar(false)
-            playerView.findViewById<View?>(R.id.exo_progress)?.visibility = View.GONE
-            playerView.findViewById<View?>(R.id.exo_time)?.visibility = View.GONE
+            playerView.findViewById<View?>(androidx.media3.R.id.exo_progress)?.visibility = View.GONE
+            playerView.findViewById<View?>(androidx.media3.R.id.exo_time)?.visibility = View.GONE
             findViewById<View?>(R.id.live_indicator)?.visibility = View.VISIBLE
         } else {
             playerView.setShowFastForwardButton(true)
